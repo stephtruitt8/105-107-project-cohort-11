@@ -41,6 +41,11 @@ class DeckStore:ObservableObject{
         let cleanName = deck.name.trimmingCharacters(in: .whitespacesAndNewlines
         )
         
+        guard !cleanName.isEmpty else {
+                    return
+        }
+
+        
         let newDeck = Deck(
             name: cleanName,
             cards: []
@@ -54,12 +59,47 @@ class DeckStore:ObservableObject{
         front: String,
         back: String
     ){
-        let _cleanFront = front.trimmingCharacters(in: .whitespacesAndNewlines
+        let cleanFront = front.trimmingCharacters(in: .whitespacesAndNewlines
         )
-        let _cleanBack = back.trimmingCharacters(in: .whitespacesAndNewlines
+        let cleanBack = back.trimmingCharacters(in: .whitespacesAndNewlines
         )
         
+        guard !cleanFront.isEmpty,
+              !cleanBack.isEmpty else {
+                    return
+        }
+
+        guard let deckIndex = decks.firstIndex(
+                    where: { $0.id == deckID }
+        ) else {
+                    return
+        }
+
+        let newCard = Flashcard(
+                question: cleanFront,
+                Answer: cleanBack
+        )
+
+            decks[deckIndex].cards.append(newCard)
     }
+        
+    func deck(withID deckID: UUID) -> Deck? {
+        decks.first { $0.id == deckID }
+    }
+
+    func deleteCards(
+        from deckID: UUID,
+        at offsets: IndexSet
+    ) {
+        guard let deckIndex = decks.firstIndex(
+            where: { $0.id == deckID }
+        ) else {
+            return
+        }
+
+        decks[deckIndex].cards.remove(atOffsets: offsets)
+    }
+    
     
     
     //deletes

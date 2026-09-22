@@ -12,13 +12,13 @@ struct DeckDetailsView: View {
     
     @EnvironmentObject var store: DeckStore
     
-    let deck: UUID
+    let deckID: UUID
     
     @State private var showingAddCard = false
     
     var body: some View {
         Group {
-            if let deck = $store.deck(withID: deck) {
+            if let deck = store.deck(withID: deckID) {
                 List {
                     Section("Cards") {
                         ForEach(deck.cards) { card in
@@ -33,20 +33,21 @@ struct DeckDetailsView: View {
                         }
                         .onDelete { offsets in
                             store.deleteCards(
-                                from:  deck,
+                                from:  deckID,
                                 at: offsets )
                         }
                     }
-                }
-                
-                Section {
-                    NavigationLink("Study This Deck") {
-                        StudyView(deck: deck)
-                        
+                    
+                    Section {
+                        NavigationLink("Study This Deck") {
+                            StudyView(deck: deck)
+                            
+                        }
+                        .disabled(deck.cards.isEmpty)
                     }
-                    .disabled(deck.cards.isEmpty)
+                
+                
                 }
-            }
                 .navigationTitle(deck.name)
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
@@ -55,18 +56,22 @@ struct DeckDetailsView: View {
                         } label: {
                             Image(systemName: "plus")
                         }
-                        
                     }
-                    
+
                     ToolbarItem(placement: .bottomBar) {
                         EditButton()
                     }
-                    
                 }
                 .sheet(isPresented: $showingAddCard) {
-                    AddFlashcardsView(deckID: deck)
-                    
+                    AddFlashcardsView(deckID: deckID)
                 }
+
+            } else {
+                ContentUnavailableView(
+                    "Deck Not Found",
+                    systemImage: "rectangle.stack.badge.questionmark"
+                )
             }
+        }
     }
 }
