@@ -90,7 +90,7 @@ struct StudyView:View {
         
         let showFront = showBackFirst ? isFlipped : !isFlipped
         
-        return showFront ? card.front : card.back
+        return showFront ? card.question : card.Answer
     }
     
     func startSession(){
@@ -120,5 +120,5 @@ struct StudyView:View {
 }
 
 #Preview {
-    StudyView(deck:Deck(name: "Demo", cards: [Flashcard(front: "Front", back: "Back")]))
+    StudyView(deck:Deck(name: "Demo", cards: [Flashcard(question: "Front", Answer: "Back")]))
 }

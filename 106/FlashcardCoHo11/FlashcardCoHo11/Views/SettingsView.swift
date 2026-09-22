@@ -14,7 +14,7 @@ struct SettingsView:View {
     @AppStorage("cardsPerSession") private var cardsPerSession:Int = 1
     @AppStorage("darkMode") private var darkMode:Bool = false
     @AppStorage("dailyGoal") private var dailyGoal:Int = 10
-    @AppStorage("userName") private var userName:String = "John Doe"
+    
     
     var body: some View {
         Form{
